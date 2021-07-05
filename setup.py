@@ -21,7 +21,7 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/6aika/ckanext-rating',
+    url='https://github.com/Adelay95/ckanext-rating',
 
     # Author details
     author='''Mikko Nieminen''',

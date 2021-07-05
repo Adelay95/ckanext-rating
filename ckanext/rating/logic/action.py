@@ -11,12 +11,11 @@ def rating_package_create(context, data_dict):
     '''Review a dataset (package).
     :param package: the name or id of the dataset to rate
     :type package: string
-    :param rating: the rating to give to the dataset, an integer between 1 and 5
-    :type rating: int
+    :param rating: rate the dataset
+    :type rating: boolean
     '''
     model = context.get('model')
     user = context.get('user')
-
     user = model.User.by_name(user)
 
     from ckan.model import User
@@ -35,24 +34,16 @@ def rating_package_create(context, data_dict):
     elif not rating:
         error = _('You must supply a rating (parameter "rating").')
     else:
-        try:
-            rating = float(rating)
-        except ValueError:
-            error = _('Rating must be an integer value.')
-        else:
-            package = model.Package.get(package_ref)
-            if rating < model.MIN_RATING or rating > model.MAX_RATING:
-                error = _('Rating must be between %i and %i.') \
-                    % (model.MIN_RATING, model.MAX_RATING)
-            elif not package:
-                error = _('Not found') + ': %r' % package_ref
+        package = model.Package.get(package_ref)
+        if not package:
+            error = _('Not found') + ': %r' % package_ref
     if error:
         raise ValidationError(error)
-
+        
     from ckanext.rating.model import Rating
     Rating.create_package_rating(package.id, rating, user)
 
-    return Rating.get_package_rating(package.id)
+    return Rating.get_user_package_rating(user, package.id)
 
 
 @toolkit.side_effect_free
@@ -69,6 +60,18 @@ def rating_package_get(context, data_dict):
     '''
     package_id = data_dict.get('package_id')
 
+    model = context.get('model')
+    user = context.get('user')
+
+    user = model.User.by_name(user)
+
+    from ckan.model import User
+    if not isinstance(user, User):
+        if toolkit.request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+            user = toolkit.request.environ.get('REMOTE_ADDR')
+        else:
+            user = toolkit.request.environ.get('HTTP_X_FORWARDED_FOR')
+
     error = None
 
     if not package_id:
@@ -79,4 +82,4 @@ def rating_package_get(context, data_dict):
 
     from ckanext.rating.model import Rating
 
-    return Rating.get_package_rating(package_id)
+    return Rating.get_user_package_rating(user, package_id)
