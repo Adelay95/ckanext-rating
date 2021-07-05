@@ -48,7 +48,6 @@ class RatingPlugin(plugins.SingletonPlugin, DefaultTranslation):
         }
 
     # ITemplateHelpers
-
     def get_helpers(self):
         return {
             'package_rating': action.rating_package_get,
@@ -69,14 +68,12 @@ class RatingPlugin(plugins.SingletonPlugin, DefaultTranslation):
         return data_dict
 
     def after_show(self, context, pkg_dict):
-
         if show_rating_in_type(pkg_dict.get('type')):
             rating_dict = get_action('rating_package_get')(context, {'package_id': pkg_dict.get('id')})
             pkg_dict['rating'] = rating_dict.first().rating if rating_dict.first() is not None else False
         return pkg_dict
 
     def after_search(self, search_results, search_params):
-
         for pkg in search_results['results']:
             if show_rating_in_type(pkg.get('type')):
                 rating_dict = get_action('rating_package_get')({}, {'package_id': pkg.get('id')})
