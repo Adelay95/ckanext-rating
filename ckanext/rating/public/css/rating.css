@@ -108,3 +108,11 @@ a.rating-star:active {
 	top: 0;
 	left: 0;
 }
+
+.recommended-search-dataset {
+  color: blue;
+}
+
+.unrecommemded-search-dataset{
+  color: gray;
+}

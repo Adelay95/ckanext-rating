@@ -36,7 +36,6 @@ class Rating(Base):
     def create_package_rating(cls, package_id, rating, ip_or_user):
 
         existing_rating = cls.get_user_package_rating(ip_or_user, package_id)
-
         if (existing_rating.first()):
             existing_rating.update({'rating': rating})
             model.repo.commit()
@@ -76,6 +75,17 @@ class Rating(Base):
                     cls.rater_ip == ip_or_user)
 
         return rating
+
+    @classmethod
+    def get_package_rating(cls, package_id):
+        ratings = model.Session.query(cls) \
+                    .filter(cls.package_id == package_id) \
+                    .filter(Rating.rating == True) \
+                    .all()
+        return {
+            'rating': True if len(ratings) > 0 else False,
+            'ratings_count': len(ratings)
+        }
 
 
 def init_tables(engine):

@@ -5,6 +5,9 @@ from ckan.lib.base import h
 from ckan.controllers.package import PackageController
 from ckan.common import request, _
 import ckan.lib.base as base
+import logging
+
+log = logging.getLogger(__name__)
 
 c = p.toolkit.c
 flatten_to_string_key = logic.flatten_to_string_key
@@ -33,4 +36,16 @@ class RatingController(p.toolkit.BaseController):
             h.redirect_to(controller='ckanext.sixodp_showcase.controller:Sixodp_ShowcaseController', action='read', id=package)
         except NotAuthorized:
             abort(403, _('Unauthenticated user not allowed to submit ratings.'))
+
+class RatingPackageController(PackageController):
+
+    def search(self):
+        cur_page = request.params.get('page')
+        if cur_page is not None:
+            c.current_page = h.get_page_number(request.params)
+        else:
+            c.current_page = 1
+        c.pkg_type = 'dataset'
+        result = super(RatingPackageController, self).search()
+        return result
 

@@ -83,3 +83,30 @@ def rating_package_get(context, data_dict):
     from ckanext.rating.model import Rating
 
     return Rating.get_user_package_rating(user, package_id)
+
+
+@toolkit.side_effect_free
+def rating_package_from_template(data_dict):
+    '''
+    Get the rating and count of ratings for a package.
+
+    Returns a dictionary containing rating and ratings counts.
+
+    :param package_id: the id of the package
+    :type package_id: string
+    :rtype: dictionary
+
+    '''
+    package_id = data_dict.get('package_id')
+
+    error = None
+
+    if not package_id:
+        error = _('You must supply a package id '
+                  '(parameter "package_id").')
+    if error:
+        raise ValidationError(error)
+
+    from ckanext.rating.model import Rating
+
+    return Rating.get_package_rating(package_id)
