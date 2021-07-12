@@ -22,9 +22,9 @@ package  - The package for which the rating belongs to
 
     <h2 class="heading">{{ _('Recommended') }}
     {% if stars == True %}
-      <a class="icon icon-star rating-star glyphicon glyphicon-thumbs-up recommended-search-dataset" href="{{ h.url_for(controller='ckanext.rating.controller:RatingController', action=action, package=package.name, rating=False) }}"></a>
+      <a class="fa fa-thumbs-up recommended-search-dataset" href="{{ h.url_for(controller='ckanext.rating.controller:RatingController', action=action, package=package.name, rating=False) }}"></a>
     {% else %}
-      <a class="icon icon-star-empty rating-star glyphicon glyphicon-thumbs-up unrecommemded-search-dataset" href="{{ h.url_for(controller='ckanext.rating.controller:RatingController', action=action, package=package.name, rating=True) }}"></a>
+      <a class="fa fa-thumbs-up unrecommemded-search-dataset" href="{{ h.url_for(controller='ckanext.rating.controller:RatingController', action=action, package=package.name, rating=True) }}"></a>
     {% endif %}
     </h2>
   </span>

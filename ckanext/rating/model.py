@@ -6,6 +6,9 @@ from sqlalchemy import types
 from sqlalchemy.ext.declarative import declarative_base
 from ckan.lib import dictization
 import ckan.model as model
+import ckan.logic as logic
+import ckan.plugins.toolkit as toolkit
+import ckan.common as common
 
 log = __import__('logging').getLogger(__name__)
 
@@ -54,10 +57,25 @@ class Rating(Base):
                 package_id=package_id,
                 rating=rating
             )
-
+            
             model.Session.add(review)
             model.repo.commit()
             log.info('Review added for package')
+        rating_count = cls.get_package_rating(package_id)
+        package_show = logic.get_action(u'package_show')
+        user = toolkit.get_action(u'get_site_user')({u'ignore_auth': True}, {})
+        context = {
+            'model': model,
+            'session': model.Session,
+            'user': user[u'name'],
+            'return_id_only': True,
+            'auth_user_obj': common.c.userobj
+        }
+        pkg = package_show(context, {u'id': package_id})
+        log.debug(rating_count.get('ratings_count'))
+        pkg['rating_count'] = rating_count.get('ratings_count')
+        log.debug(pkg)
+        logic.get_action('package_update')(context, pkg)
 
     @classmethod
     def get_user_package_rating(cls, ip_or_user, package_id):

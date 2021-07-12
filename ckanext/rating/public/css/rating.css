@@ -110,9 +110,13 @@ a.rating-star:active {
 }
 
 .recommended-search-dataset {
-  color: blue;
+  color: #0d6cac;
 }
 
 .unrecommemded-search-dataset{
   color: gray;
+}
+
+.thumbs-up-ckan{
+  background-image: url("../css/thumbs-up-regular.png");
 }

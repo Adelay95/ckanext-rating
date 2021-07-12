@@ -6,8 +6,8 @@
     {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
     {% set rating = h.package_rating_template({'package_id' : package.id} ) %}
         <div class="dataset-rating">
-            {% if rating.rating == True %}<i class="user-rating-star glyphicon glyphicon-thumbs-up recommended-search-dataset"></i> {{rating.ratings_count}}
-            {% else %}<i class="user-rating-star glyphicon glyphicon-thumbs-up "></i>
+            {% if rating.rating == True %}<i class="fa fa-thumbs-up recommended-search-dataset"></i>
+            {% else %}<i class="fa fa-thumbs-up unrecommemded-search-dataset"></i>
             {% endif %}
         </div>
 {% endblock %}

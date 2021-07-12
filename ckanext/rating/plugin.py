@@ -95,23 +95,12 @@ class RatingPlugin(plugins.SingletonPlugin, DefaultTranslation):
 
     # IPackageController
 
-    def before_index(self, data_dict):
-        rating_dict = action.rating_package_get(None, {'package_id': data_dict['id']})
-        data_dict['rating'] = rating_dict.first().rating if rating_dict.first() is not None else False
-        return data_dict
 
     def after_show(self, context, pkg_dict):
         if show_rating_in_type(pkg_dict.get('type')):
             rating_dict = get_action('rating_package_get')(context, {'package_id': pkg_dict.get('id')})
             pkg_dict['rating'] = rating_dict.first().rating if rating_dict.first() is not None else False
         return pkg_dict
-
-    def after_search(self, search_results, search_params):
-        for pkg in search_results['results']:
-            if show_rating_in_type(pkg.get('type')):
-                rating_dict = get_action('rating_package_get')({}, {'package_id': pkg.get('id')})
-                pkg['rating'] = rating_dict.first().rating if rating_dict.first() is not None else False
-        return search_results
 
     # IRoutes
 
