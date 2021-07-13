@@ -7,7 +7,10 @@ c = toolkit.c
 
 def get_user_rating(package_id):
     if not c.userobj:
-        user = toolkit.request.environ.get('REMOTE_ADDR')
+        if toolkit.request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+            user = toolkit.request.environ.get('REMOTE_ADDR')
+        else:
+            user = toolkit.request.environ.get('HTTP_X_FORWARDED_FOR')
     else:
         user = c.userobj
     user_rating = Rating.get_user_package_rating(user, package_id).first()
