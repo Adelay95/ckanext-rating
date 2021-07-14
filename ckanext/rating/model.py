@@ -72,9 +72,7 @@ class Rating(Base):
             'auth_user_obj': common.c.userobj
         }
         pkg = package_show(context, {u'id': package_id})
-        log.debug(rating_count.get('ratings_count'))
         pkg['rating_count'] = rating_count.get('ratings_count')
-        log.debug(pkg)
         logic.get_action('package_update')(context, pkg)
 
     @classmethod
